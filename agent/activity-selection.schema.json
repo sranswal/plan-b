@@ -1,0 +1,1 @@
+{"type":"object","properties":{"title":{"type":"string","maxLength":200},"minutes":{"type":"integer"},"unsupported_time":{"type":"boolean"}},"required":["title","minutes","unsupported_time"],"additionalProperties":false}

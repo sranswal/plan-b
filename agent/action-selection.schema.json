@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "task_id": {"type": "string"},
+    "title": {"type": "string"},
+    "deadline": {"type": "string"}
+  },
+  "required": ["task_id", "title", "deadline"],
+  "additionalProperties": false
+}

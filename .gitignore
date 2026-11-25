@@ -1,0 +1,48 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Dependencies
+.deps/
+.npm-cache/
+node_modules/
+
+# Private environment and credentials
+.env
+.env.*
+!.env.example
+client_secret*.json
+credentials*.json
+token*.json
+oauth_tokens*.json
+
+# Synapse build cache and sessions
+.synapse/
+
+# Synapse generated servers (numbered rebuilds beyond the demo set)
+services/context/synapse_auto_server_[4-9].py
+services/context/synapse_auto_server_1[0-9].py
+services/tasks/synapse_auto_server_[4-9].py
+services/tasks/synapse_auto_server_1[0-9].py
+
+# Local state and databases
+.plan-b/
+*.sqlite3
+
+# IDE and OS
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+Thumbs.db
+.DS_Store
+
+# Recordings and temporary files
+*.mp4
+*.webm
+*.asciinema
+*.cast
+*.tmp
+*.bak

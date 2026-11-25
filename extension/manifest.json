@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Plan B — Capture Gmail deadline",
+  "version": "0.2.0",
+  "description": "Spot explicit deadlines in open Gmail messages and add them to your connected calendar.",
+  "permissions": ["contextMenus"],
+  "host_permissions": ["http://127.0.0.1/*"],
+  "content_scripts": [{"matches": ["https://mail.google.com/*"], "js": ["gmail.js"]}],
+  "background": {"service_worker": "capture.js"}
+}

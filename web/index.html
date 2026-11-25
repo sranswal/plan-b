@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f3e9">
+  <title>Plan B — Schedule rescue</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='25' text-anchor='middle' font-size='28' fill='%23687d45'%3E%E2%9C%B3%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wordmark"><span class="mark" aria-hidden="true">✳</span>Plan B<span class="wordmark-dot">.</span></div>
+    <button id="open-sources" class="top-link" type="button"><span class="signal"></span> Synapse connections <span aria-hidden="true">↗</span></button>
+  </header>
+  <main>
+    <section class="intro">
+      <div class="intro-copy">
+        <p class="kicker"><span aria-hidden="true"></span> YOUR SCHEDULE RESCUE WORKSPACE</p>
+        <h1>Plans change.<br><em>Make room.</em></h1>
+        <p class="lede">Because Plan A rarely survives real life.</p>
+      </div>
+      <div class="art" aria-hidden="true">
+        <div class="art-grid"></div>
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
+        <div class="art-point"></div><div class="art-glow"></div>
+      </div>
+    </section>
+    <div class="workspace">
+      <section class="assistant" aria-labelledby="assistant-title">
+        <div class="assistant-head"><div class="assistant-icon" aria-hidden="true">✳</div><div><h2 id="assistant-title">Ask Plan B</h2><p>Calendar × Tasks</p></div></div>
+        <form id="planner">
+          <label class="sr-only" for="question">What changed?</label>
+          <div id="email-fields" hidden>
+            <p>Captured from Gmail. Review the selected text before continuing.</p>
+            <label for="email-subject">Deadline title</label><input id="email-subject" maxlength="200" placeholder="e.g. Send the deck">
+            <label for="email-reference">Message date and time (for relative dates)</label><input id="email-reference" type="datetime-local">
+            <label for="email-destination">Save as</label><select id="email-destination"><option value="task">Plan B task</option><option value="calendar">Google Calendar deadline marker</option></select>
+          </div>
+          <textarea id="question" maxlength="12000" rows="3" placeholder="What do you need to make time for?" required></textarea>
+          <button id="voice" class="voice" type="button" aria-pressed="false">🎙 Dictate</button>
+          <p id="voice-status" role="status" hidden></p>
+          <button class="send" id="run" type="submit">Send <span aria-hidden="true">↗</span></button>
+        </form>
+        <div class="examples">
+          <p class="small-label">TRY ASKING</p>
+          <button type="button" data-example="focus"><span>Find 90 minutes for my README</span><span aria-hidden="true">↗</span></button>
+          <button type="button" data-example="routine"><span>Fit three gym sessions this week</span><span aria-hidden="true">↗</span></button>
+        </div>
+        <div id="answer" class="answer" aria-live="polite" hidden></div>
+        <button id="review-slot" class="send" type="button" hidden>Review this slot <span aria-hidden="true">↗</span></button>
+        <button id="change-time" class="voice" type="button" hidden>Try another time</button>
+        <form id="follow-up" hidden>
+          <label class="sr-only" for="follow-up-reply">Reply to Plan B’s question</label>
+          <textarea id="follow-up-reply" rows="2" placeholder="Your reply…" maxlength="1000" required></textarea>
+          <button id="follow-up-voice" class="voice" type="button" aria-pressed="false">🎙 Dictate</button>
+          <p id="follow-up-voice-status" class="voice-status" role="status" hidden></p>
+          <button class="send" type="submit">Send reply <span aria-hidden="true">↗</span></button>
+        </form>
+        <div id="proposal" class="proposal" aria-live="polite" hidden></div>
+      </section>
+      <section class="calendar" aria-labelledby="week-title">
+        <div class="calendar-head">
+          <div><p class="small-label" id="provider">FIXTURE CALENDAR</p><h2 id="week-title">Your week</h2></div>
+          <div class="calendar-meta"><span id="week-range">Nov 23–29</span></div>
+        </div>
+        <div class="legend"><span><i class="fixed"></i>Commitment</span><span><i class="focus"></i>Focus block</span><span><i class="routine"></i>Routine</span><span><i class="deadline"></i>Task deadline</span></div>
+        <div class="week" id="week" aria-label="Weekly calendar"></div>
+        <div id="upcoming" class="upcoming" aria-label="Upcoming weeks"></div>
+        <details class="task-list">
+          <summary>Manage task estimates</summary>
+          <p>Estimates are saved in Plan B.</p>
+          <div id="dashboard-tasks" aria-live="polite">Loading tasks…</div>
+        </details>
+        <p class="calendar-note" id="calendar-note" aria-live="polite">Loading fixture commitments from Context MCP…</p>
+      </section>
+    </div>
+    <details class="evidence" id="evidence">
+      <summary><span><span class="signal"></span> Synapse evidence</span><span id="source-summary" class="evidence-subtitle">Tool catalog and call trace</span></summary>
+      <div class="evidence-body">
+        <section><div class="section-head"><h3>Tool catalog</h3><button type="button" id="refresh">Reload Tasks build</button></div><div id="catalog"></div></section>
+        <section><h3>Agent tool calls</h3><ol id="calls"><li>Run a plan to see its tool calls.</li></ol></section>
+      </div>
+      <p id="source-status" role="status"></p>
+    </details>
+    <footer><span>Plan B</span><span id="tasks-provider"></span></footer>
+  </main>
+</body>
+</html>
