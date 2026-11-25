@@ -6,47 +6,21 @@
 
 <p align="center"><strong>Plans change. Make room.</strong></p>
 
-<p align="center">
-  <img alt="Synapse" src="https://img.shields.io/badge/Synapse-0.1.9-263b2b">
-  <img alt="Model Context Protocol" src="https://img.shields.io/badge/MCP-two_servers-54663b">
-  <img alt="Python 3.12" src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white">
-  <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.165-009688?logo=fastapi&logoColor=white">
-  <img alt="Google Calendar and Tasks" src="https://img.shields.io/badge/Google-Calendar_%2B_Tasks-4285F4?logo=google&logoColor=white">
-  <img alt="Synapse Track 3" src="https://img.shields.io/badge/Track_3-Agentic_Integration-b6d65a">
-</p>
+<p align="center">🎥 <a href="https://youtu.be/ZuymbzRHiec">Watch the 3-minute demo</a></p>
 
-Plan B is a schedule-rescue workspace that reasons across calendars, tasks, deadlines, and routines. It finds workable time from real constraints, explains its evidence, and keeps every external write behind an explicit human approval.
+**Calendar × Tasks × Email.** Plan B helps you make room for deadlines and routines when your schedule changes. It combines Google Calendar availability, Google Tasks deadlines, and deadlines captured from selected Gmail text. Fixture mode gives judges a reproducible demo without a Google account.
 
 ## Synapse Track 3, end to end
 
-Synapse is the integration layer at the center of Plan B:
-
-- **Two independent services, two generated MCP servers.** Context owns calendar availability and email-deadline extraction; Tasks owns tasks, routines, and preferences. Synapse generates a separate MCP server and namespace for each.
-- **Cross-system Calendar + Tasks reasoning.** A single plan combines task deadlines and effort with fixed calendar commitments before a deterministic scheduler accepts a slot.
-- **Approved, verified writes through Synapse.** Plan B shows the exact change, waits for human approval, rechecks both systems, writes through the appropriate Synapse MCP tool, and reads the saved record back before reporting success.
-- **Live discovery without an agent redesign.** Adding `GET /routine-preferences` and rebuilding with `--discover` exposes `tasks/get_routine_preferences`; the same agent can immediately use the new capability.
-
-The exact Tasks discovery command used in the demo is:
-
-```powershell
-npx.cmd --yes @2ndbrainlabs-ai/synapse-cli@0.1.9 build --auto --local --provider ollama --discover --all-endpoints --base-url http://127.0.0.1:8001
-```
+- **Two independent services, two Synapse-generated MCP servers.** Context provides calendar availability and email-deadline extraction. Tasks provides task deadlines, effort estimates, and routines. One agent reasons across both servers to find time around existing commitments.
+- **Live capability discovery.** After adding `GET /routine-preferences` to Tasks, Synapse `build --discover` exposes `tasks/get_routine_preferences`. The same agent uses the new tool to fit three sessions around meetings and deadline work.
+- **Approved, verified writes through Synapse.** Plan B shows the exact change, waits for explicit human approval, rechecks Calendar and Tasks, writes through Synapse, and reads back the saved record to verify the result.
 
 ## Product
 
 <p align="center">
   <img src="docs/assets/dashboard.webp" alt="Plan B dashboard with weekly calendar" width="92%">
 </p>
-
-Plan B supports:
-
-- Focus-time planning around meetings and deadlines.
-- Weekly routine planning with frequency, duration, allowed-day, time-window, and spacing rules.
-- Calendar events and tasks with exact proposal review, expiry, idempotency, and read-back.
-- Optional Google Calendar and Google Tasks providers.
-- Explicit Gmail selected-text deadline capture without Gmail OAuth.
-- A visible Synapse catalog and call trace for every plan.
-- Fixture mode for a reproducible, account-free judge demo.
 
 ### Cross-system planning
 
@@ -68,7 +42,7 @@ Plan B calls the Tasks MCP server for the deadline and effort estimate, calls th
   <img src="docs/assets/synapse-discovery.webp" alt="Plan B routine result with Synapse tool catalog and call trace" width="92%">
 </p>
 
-The Track 3 discovery demo starts with a Tasks build that can list routines but cannot read structured routine rules. After `/routine-preferences` is added and Synapse rebuilds the Tasks MCP server, the catalog gains `get_routine_preferences`. Repeating the same request produces a validated three-session plan, with no change to the coordinator or scheduler contract.
+The Synapse catalog and call trace show the discovered tool and the agent's completed calls.
 
 ### Real Gmail deadline capture
 
@@ -121,7 +95,8 @@ The approval signature is bound to the proposal ID, payload, destination, source
 - Windows with PowerShell
 - Python 3.12+
 - A signed-in Codex CLI available on `PATH`
-- Node.js 20+ only when regenerating Synapse builds
+- Node.js 20+ for extension tests or Synapse builds
+- Ollama with the model configured for Synapse when replaying live discovery
 
 ### Install
 
@@ -158,7 +133,19 @@ Open **Synapse evidence** and point out the separate Context and Tasks catalogs 
 
 ### 2. Discovery before and after
 
-Stop the browser coordinator, restore the staged baseline, and rebuild Tasks:
+Start with the tracked [baseline Tasks build](services/tasks/synapse_auto_server_2.py). Stop the coordinator, set the Tasks override below, and rerun the Quick start launch command.
+
+```powershell
+$env:PLAN_B_WEB_TASKS_SERVER = (Resolve-Path .\services\tasks\synapse_auto_server_2.py).Path
+```
+
+```text
+Can I fit three gym sessions into this week while protecting my meetings and hackathon work?
+```
+
+The baseline catalog lists routines, and the agent reports that structured routine rules are missing. Restart with the Quick start Tasks override pointing to the tracked [post-discovery build](services/tasks/synapse_auto_server_3.py) and repeat the exact prompt. The agent calls `tasks/get_routine_preferences` and fits three sessions around protected work.
+
+To replay live discovery, stop the coordinator and run the following from the repo root:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/stage_routine_preferences.py rollback
@@ -168,23 +155,7 @@ npx.cmd --yes @2ndbrainlabs-ai/synapse-cli@0.1.9 build --auto --local --provider
 Pop-Location
 ```
 
-Start Plan B with the baseline file printed by Synapse and run:
-
-```text
-Can I fit three gym sessions into this week while protecting my meetings and hackathon work?
-```
-
-The baseline honestly reports that structured routine rules are missing. Apply the route and rebuild using the same discovery command:
-
-```powershell
-.\.venv\Scripts\python.exe scripts/stage_routine_preferences.py apply
-
-Push-Location services/tasks
-npx.cmd --yes @2ndbrainlabs-ai/synapse-cli@0.1.9 build --auto --local --provider ollama --discover --all-endpoints --base-url http://127.0.0.1:8001
-Pop-Location
-```
-
-In the browser, click **Reload Tasks build** and repeat the exact prompt. The new `tasks/get_routine_preferences` tool appears in the catalog and call trace, and Plan B fits three sessions around protected work.
+Start Plan B with the Tasks file printed by Synapse and run the baseline prompt. From the repo root, run `.\.venv\Scripts\python.exe scripts/stage_routine_preferences.py apply` and rerun the discovery build from `services/tasks`. Click **Reload Tasks build** to restart the Tasks backend and load the new catalog, then repeat the prompt.
 
 ### 3. Approval and verification
 
